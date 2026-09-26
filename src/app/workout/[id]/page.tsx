@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { Bookmark, CalendarPlus } from "lucide-react";
 import { getWorkout } from "@/lib/api";
+import WorkoutActions from "@/app/components/WorkoutDetails/WorkoutActions";
 
 interface WorkoutDetailsPageProps {
   params: Promise<{
@@ -124,25 +124,7 @@ const WorkoutDetailsPage = async ({
             </div>
 
             {/* ================= BUTTONS ================= */}
-            <div className="mt-6 flex flex-wrap gap-3">
-
-              <button
-                type="button"
-                className="flex items-center gap-2 rounded-md bg-[#ccff00] px-4 py-2.5 text-xs font-bold text-black transition hover:bg-[#b8e600]"
-              >
-                <CalendarPlus size={14} />
-                Add to today&apos;s plan
-              </button>
-
-              <button
-                type="button"
-                className="flex items-center gap-2 rounded-md border border-[#30343c] bg-transparent px-4 py-2.5 text-xs font-medium text-white transition hover:bg-[#181a1f]"
-              >
-                <Bookmark size={14} />
-                Save for later
-              </button>
-
-            </div>
+            <WorkoutActions workout={workout}/>
 
           </div>
         </div>
