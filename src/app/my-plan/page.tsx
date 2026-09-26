@@ -3,9 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Clock3, Flame, Star, Check, X, ChevronDown } from "lucide-react";
+import {
+  Clock3,
+  Flame,
+  Star,
+  Check,
+  X,
+  ChevronDown,
+} from "lucide-react";
 import { toast } from "react-toastify";
 import { useWorkout } from "@/context/WorkoutContext";
+
+type SortOption = "duration" | "calories" | "rating";
 
 const MyPlanPage = () => {
   const {
@@ -16,6 +25,11 @@ const MyPlanPage = () => {
   } = useWorkout();
 
   const [activeTab, setActiveTab] = useState<"plan" | "saved">("plan");
+  const [sortBy, setSortBy] = useState<SortOption>("duration");
+
+  // =========================
+  // Metrics
+  // =========================
 
   const totalMinutes = todayPlan.reduce(
     (total, workout) => total + workout.duration,
@@ -27,8 +41,32 @@ const MyPlanPage = () => {
     0
   );
 
+  // =========================
+  // Current Tab
+  // =========================
+
   const currentWorkouts =
     activeTab === "plan" ? todayPlan : savedWorkouts;
+
+  // =========================
+  // Sorting
+  // =========================
+
+  const sortedWorkouts = [...currentWorkouts].sort((a, b) => {
+    if (sortBy === "duration") {
+      return a.duration - b.duration;
+    }
+
+    if (sortBy === "calories") {
+      return a.caloriesBurned - b.caloriesBurned;
+    }
+
+    return a.rating - b.rating;
+  });
+
+  // =========================
+  // Mark as Done
+  // =========================
 
   const handleMarkAsDone = (id: number) => {
     const workout = todayPlan.find((item) => item.id === id);
@@ -39,6 +77,10 @@ const MyPlanPage = () => {
       toast.success(`${workout.name} marked as done.`);
     }
   };
+
+  // =========================
+  // Remove Workout
+  // =========================
 
   const handleRemove = (id: number) => {
     if (activeTab === "plan") {
@@ -53,21 +95,22 @@ const MyPlanPage = () => {
   return (
     <main className="min-h-screen bg-[#0d0e10] px-4 py-8 text-white sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-
-        {/* Header */}
+        {/* ========================================
+            HEADER
+        ======================================== */}
         <div className="mb-7">
           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[#ccff00]">
             Training Dashboard
           </p>
 
-          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <h1 className="text-3xl font-black uppercase leading-none tracking-tight sm:text-4xl">
                 My Plan
               </h1>
 
               <p className="mt-3 max-w-xl text-xs leading-5 text-[#777c86] sm:text-sm">
-                Manage your workouts and keep today's training organized.
+                Manage your workouts and keep today&apos;s training organized.
               </p>
             </div>
 
@@ -80,9 +123,11 @@ const MyPlanPage = () => {
           </div>
         </div>
 
-        {/* Metrics */}
+        {/* ========================================
+            METRICS
+        ======================================== */}
         <div className="mb-7 grid grid-cols-3 gap-2 sm:gap-3">
-
+          {/* Exercises */}
           <div className="rounded-xl border border-[#24272e] bg-[#14161a] px-3 py-4 sm:px-5">
             <p className="text-[9px] font-bold uppercase tracking-wider text-[#666b75]">
               Exercises
@@ -93,6 +138,7 @@ const MyPlanPage = () => {
             </p>
           </div>
 
+          {/* Minutes */}
           <div className="rounded-xl border border-[#24272e] bg-[#14161a] px-3 py-4 sm:px-5">
             <p className="text-[9px] font-bold uppercase tracking-wider text-[#666b75]">
               Minutes
@@ -103,6 +149,7 @@ const MyPlanPage = () => {
             </p>
           </div>
 
+          {/* Calories */}
           <div className="rounded-xl border border-[#24272e] bg-[#14161a] px-3 py-4 sm:px-5">
             <p className="text-[9px] font-bold uppercase tracking-wider text-[#666b75]">
               Calories
@@ -112,15 +159,14 @@ const MyPlanPage = () => {
               {totalCalories}
             </p>
           </div>
-
         </div>
 
-        {/* Tabs + Sort */}
-        <div className="mb-5 flex items-center justify-between gap-3">
-
+        {/* ========================================
+            TABS + SORT
+        ======================================== */}
+        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Tabs */}
-          <div className="flex rounded-lg border border-[#24272e] bg-[#14161a] p-1">
-
+          <div className="flex w-fit rounded-lg border border-[#24272e] bg-[#14161a] p-1">
             <button
               type="button"
               onClick={() => setActiveTab("plan")}
@@ -130,7 +176,7 @@ const MyPlanPage = () => {
                   : "text-[#666b75] hover:text-white"
               }`}
             >
-              Today's Plan
+              Today&apos;s Plan
             </button>
 
             <button
@@ -144,33 +190,66 @@ const MyPlanPage = () => {
             >
               Saved
             </button>
-
           </div>
 
-          {/* Sort */}
-          <button
-            type="button"
-            className="flex items-center gap-2 rounded-lg border border-[#24272e] bg-[#14161a] px-3 py-2 text-[10px] text-[#777c86] transition hover:border-[#3a3e47] hover:text-white"
-          >
-            <span>Sort By</span>
+          {/* Sort Dropdown */}
+          <div className="relative w-fit">
+            <label htmlFor="sort-workouts" className="sr-only">
+              Sort workouts
+            </label>
 
-            <span className="font-medium text-white">
-              Duration
-            </span>
+            <div className="flex items-center gap-2 rounded-lg border border-[#24272e] bg-[#14161a] px-3 py-2">
+              <span className="text-[10px] text-[#777c86]">
+                Sort By
+              </span>
 
-            <ChevronDown size={12} />
-          </button>
+              <div className="relative">
+                <select
+                  id="sort-workouts"
+                  value={sortBy}
+                  onChange={(event) =>
+                    setSortBy(event.target.value as SortOption)
+                  }
+                  className="cursor-pointer appearance-none bg-transparent pr-5 text-[10px] font-medium text-white outline-none"
+                >
+                  <option
+                    value="duration"
+                    className="bg-[#14161a]"
+                  >
+                    Duration
+                  </option>
 
+                  <option
+                    value="calories"
+                    className="bg-[#14161a]"
+                  >
+                    Calories
+                  </option>
+
+                  <option
+                    value="rating"
+                    className="bg-[#14161a]"
+                  >
+                    Rating
+                  </option>
+                </select>
+
+                <ChevronDown
+                  size={12}
+                  className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-[#777c86]"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Workout List */}
-        {currentWorkouts.length === 0 ? (
+        {/* ========================================
+            EMPTY STATE
+        ======================================== */}
+        {sortedWorkouts.length === 0 ? (
           <div className="rounded-2xl border border-[#24272e] bg-[#14161a] px-6 py-16 text-center">
-
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#30343c] bg-[#191b20]">
-              <span className="text-xl text-[#666b75]">
-                +
-              </span>
+              <span className="text-xl text-[#666b75]">+</span>
             </div>
 
             <h2 className="mt-5 text-lg font-black uppercase">
@@ -191,34 +270,37 @@ const MyPlanPage = () => {
             >
               Browse Workouts
             </Link>
-
           </div>
         ) : (
+          /* ========================================
+             WORKOUT LIST
+          ======================================== */
           <div className="space-y-3">
-
-            {currentWorkouts.map((workout) => (
+            {sortedWorkouts.map((workout) => (
               <div
                 key={workout.id}
-                className="group overflow-hidden rounded-xl border border-[#24272e] bg-[#14161a] transition hover:border-[#343841]"
+                className="overflow-hidden rounded-xl border border-[#24272e] bg-[#14161a] transition hover:border-[#343841]"
               >
                 <div className="flex min-h-[110px]">
-
-                  {/* Image */}
-                  <div className="relative w-[115px] shrink-0 sm:w-[145px]">
+                  {/* ========================================
+                      IMAGE
+                  ======================================== */}
+                  <div className="relative w-[105px] shrink-0 sm:w-[145px]">
                     <Image
                       src={workout.image}
                       alt={workout.name}
                       fill
+                      sizes="(max-width: 640px) 105px, 145px"
                       className="object-cover"
                     />
                   </div>
 
-                  {/* Main Content */}
-                  <div className="flex min-w-0 flex-1 items-center justify-between gap-4 px-4 py-3 sm:px-5">
-
-                    {/* Workout Information */}
+                  {/* ========================================
+                      CONTENT
+                  ======================================== */}
+                  <div className="flex min-w-0 flex-1 flex-col justify-center gap-3 px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+                    {/* Workout Info */}
                     <div className="min-w-0">
-
                       <p className="mb-1 text-[8px] font-bold uppercase tracking-[0.15em] text-[#ccff00]">
                         {workout.difficulty}
                       </p>
@@ -232,8 +314,7 @@ const MyPlanPage = () => {
                       </p>
 
                       {/* Stats */}
-                      <div className="mt-3 flex flex-wrap items-center gap-3 text-[9px] text-[#777c86]">
-
+                      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[9px] text-[#777c86]">
                         <span className="flex items-center gap-1">
                           <Clock3
                             size={11}
@@ -257,13 +338,14 @@ const MyPlanPage = () => {
                           />
                           {workout.rating}
                         </span>
-
                       </div>
                     </div>
 
-                    {/* Actions */}
+                    {/* ========================================
+                        ACTIONS
+                    ======================================== */}
                     <div className="flex shrink-0 items-center gap-2">
-
+                      {/* Desktop View Details */}
                       <Link
                         href={`/workout/${workout.id}`}
                         className="hidden rounded-full border border-[#30343c] px-3 py-2 text-[9px] font-bold uppercase tracking-wide text-[#b5bac4] transition hover:border-white hover:text-white sm:block"
@@ -271,6 +353,7 @@ const MyPlanPage = () => {
                         View Details
                       </Link>
 
+                      {/* Mark as Done */}
                       {activeTab === "plan" && (
                         <button
                           type="button"
@@ -278,45 +361,45 @@ const MyPlanPage = () => {
                           className="flex items-center gap-1.5 rounded-full bg-[#ccff00] px-3 py-2 text-[9px] font-black uppercase tracking-wide text-black transition hover:bg-[#b8e600]"
                         >
                           <Check size={11} strokeWidth={3} />
+
                           <span className="hidden sm:inline">
                             Mark as Done
                           </span>
+
                           <span className="sm:hidden">
                             Done
                           </span>
                         </button>
                       )}
 
+                      {/* Remove */}
                       <button
                         type="button"
                         onClick={() => handleRemove(workout.id)}
-                        className="flex h-8 w-8 items-center justify-center rounded-full text-[#666b75] transition hover:bg-[#202228] hover:text-white"
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#666b75] transition hover:bg-[#202228] hover:text-white"
                         aria-label={`Remove ${workout.name}`}
                       >
                         <X size={13} />
                       </button>
-
                     </div>
-
                   </div>
                 </div>
 
-                {/* Mobile Details Link */}
+                {/* ========================================
+                    MOBILE DETAILS LINK
+                ======================================== */}
                 <div className="border-t border-[#202228] px-4 py-2 sm:hidden">
                   <Link
                     href={`/workout/${workout.id}`}
-                    className="text-[9px] font-bold uppercase tracking-wide text-[#777c86] hover:text-white"
+                    className="text-[9px] font-bold uppercase tracking-wide text-[#777c86] transition hover:text-white"
                   >
                     View Details →
                   </Link>
                 </div>
-
               </div>
             ))}
-
           </div>
         )}
-
       </div>
     </main>
   );

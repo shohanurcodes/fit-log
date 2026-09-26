@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import { getWorkout } from "@/lib/api";
 import WorkoutActions from "@/app/components/WorkoutDetails/WorkoutActions";
 
@@ -13,17 +14,20 @@ const WorkoutDetailsPage = async ({
 }: WorkoutDetailsPageProps) => {
   const { id } = await params;
 
-  const workout = await getWorkout(id);
+  let workout;
+
+  try {
+    workout = await getWorkout(id);
+  } catch {
+    notFound();
+  }
 
   return (
     <main className="min-h-screen bg-[#0d0e10] px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-
-        {/* Main Details */}
         <div className="grid gap-8 lg:grid-cols-2">
-
-          {/* ================= IMAGE ================= */}
-          <div className="relative h-[420px] overflow-hidden rounded-xl lg:h-[520px]">
+          {/* Image */}
+          <div className="relative h-[320px] overflow-hidden rounded-xl sm:h-[420px] lg:h-[520px]">
             <Image
               src={workout.image}
               alt={workout.name}
@@ -33,20 +37,17 @@ const WorkoutDetailsPage = async ({
             />
           </div>
 
-          {/* ================= RIGHT SIDE ================= */}
+          {/* Details */}
           <div>
-
-            {/* Title */}
             <h1 className="text-3xl font-black uppercase leading-tight tracking-wide text-white sm:text-4xl">
               {workout.name}
             </h1>
 
-            {/* Description */}
             <p className="mt-2 text-sm leading-6 text-[#8d929d]">
               {workout.description}
             </p>
 
-            {/* Muscle Groups */}
+            {/* Muscle groups */}
             <div className="mt-4 flex flex-wrap gap-2">
               {workout.muscleGroups.slice(0, 2).map((muscle) => (
                 <span
@@ -58,9 +59,8 @@ const WorkoutDetailsPage = async ({
               ))}
             </div>
 
-            {/* ================= SPECS ================= */}
+            {/* Specs */}
             <div className="mt-4 overflow-hidden rounded-xl border border-[#282b32] bg-[#15171c]">
-
               <InfoRow
                 label="EQUIPMENT"
                 value={workout.equipment}
@@ -96,46 +96,40 @@ const WorkoutDetailsPage = async ({
                 value={String(workout.rating)}
                 last
               />
-
             </div>
 
-            {/* ================= INSTRUCTIONS ================= */}
+            {/* Instructions */}
             <div className="mt-5">
-
               <h2 className="text-sm font-black uppercase tracking-wide text-white">
                 Instructions
               </h2>
 
               <ol className="mt-3 space-y-2.5">
-                {workout.instructions.map((instruction, index) => (
-                  <li
-                    key={index}
-                    className="flex gap-3 text-xs leading-5 text-[#8d929d]"
-                  >
-                    <span className="min-w-[14px] text-[#666b75]">
-                      {index + 1}.
-                    </span>
+                {workout.instructions.slice(0, 4).map(
+                  (instruction, index) => (
+                    <li
+                      key={index}
+                      className="flex gap-3 text-xs leading-5 text-[#8d929d]"
+                    >
+                      <span className="min-w-[14px] text-[#666b75]">
+                        {index + 1}.
+                      </span>
 
-                    <span>{instruction}</span>
-                  </li>
-                ))}
+                      <span>{instruction}</span>
+                    </li>
+                  )
+                )}
               </ol>
-
             </div>
 
-            {/* ================= BUTTONS ================= */}
-            <WorkoutActions workout={workout}/>
-
+            {/* Actions */}
+            <WorkoutActions workout={workout} />
           </div>
         </div>
-
       </div>
     </main>
   );
 };
-
-
-/* ================= INFO ROW ================= */
 
 interface InfoRowProps {
   label: string;
