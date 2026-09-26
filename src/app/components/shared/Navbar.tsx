@@ -1,18 +1,25 @@
+
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useWorkout } from "@/context/WorkoutContext";
 
 const Navbar = () => {
   const pathname = usePathname();
+
+  const { todayPlan, savedWorkouts } = useWorkout();
 
   return (
     <nav className="w-full border-b border-white/10 bg-[#111111]">
       <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
         {/* Logo */}
-        <Link href="/" className="flex shrink-0 items-center gap-3">
+        <Link
+          href="/"
+          className="flex shrink-0 items-center gap-3"
+        >
           <Image
             src="/logo.png"
             alt="FitLog Logo"
@@ -58,16 +65,17 @@ const Navbar = () => {
             href="/my-plan"
             className="rounded-full bg-[#ccff00] px-3 py-2 text-xs font-bold uppercase text-black"
           >
-            Plan <span className="ml-1">0</span>
+            Plan <span className="ml-1">{todayPlan.length}</span>
           </Link>
 
           <Link
             href="/my-plan"
             className="rounded-full border border-white/30 px-3 py-2 text-xs font-bold uppercase text-white"
           >
-            Saved <span className="ml-1">0</span>
+            Saved <span className="ml-1">{savedWorkouts.length}</span>
           </Link>
         </div>
+
       </div>
     </nav>
   );
