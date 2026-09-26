@@ -1,47 +1,99 @@
-# FitLog — Workout Library
+# FitLog
 
-FitLog is a modern workout library and workout planning application built with Next.js and Tailwind CSS. It allows users to explore workouts, view detailed exercise information, add workouts to today's plan, save workouts for later, and organize their training through a simple dashboard.
+FitLog is a responsive workout library and workout planning web application. Users can explore workouts, view workout details, add workouts to today's plan, and save workouts for later.
 
-## Live Website
+## Technologies
 
-[Add your deployed website URL here]
-
-## GitHub Repository
-
-[Add your GitHub repository URL here]
-
-## Technologies Used
-
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-- Lucide React
-- React Toastify
-- REST API
-- Next.js App Router
+* Next.js
+* TypeScript
+* React
+* Tailwind CSS
+* DaisyUI
+* Lucide React
+* REST API
 
 ## Features
 
-- Browse a workout library with exercises covering different muscle groups.
-- View detailed information for each workout.
-- Add workouts to today's training plan.
-- Save workouts for later.
-- View live workout plan and saved workout counts in the navbar.
-- Track total exercises, workout minutes, and calories in My Plan.
-- Mark workouts as completed.
-- Remove workouts from today's plan or saved workouts.
-- Sort workouts by duration, calories, or rating.
-- Responsive design for mobile, tablet, and desktop devices.
-- Loading animation while workout data is being fetched.
-- Custom 404 page for invalid workout routes.
-- Toast notifications for workout actions.
+* Browse workouts from the workout library
+* View detailed information for each workout
+* Add workouts to today's plan
+* Save workouts for later
+* Prevent duplicate workouts
+* Limit today's plan to 5 workouts
+* Track exercises, total minutes, and calories
+* View saved workouts separately
+* Mark workouts as done
+* Remove workouts from the plan or saved list
+* Responsive design for mobile, tablet, and desktop
+* Dynamic Plan and Saved counters in the navbar
+* Custom 404 page for invalid workout routes
+* Toast notifications for workout actions
 
 ## API
 
-FitLog uses the following REST API:
+The application uses the FitLog API:
 
-### Get all workouts
+* All workouts: `https://api.abcz.workers.dev/api/fitlog`
+* Single workout: `https://api.abcz.workers.dev/api/fitlog/:id`
+
+## Project Structure
 
 ```text
-https://api.api-store.workers.dev/api/fitlog
+src/
+├── app/
+│   ├── components/
+│   │   ├── Home/
+│   │   ├── Navbar/
+│   │   ├── WorkoutDetails/
+│   │   └── Footer/
+│   ├── my-plan/
+│   ├── workout/
+│   │   └── [id]/
+│   ├── layout.tsx
+│   └── page.tsx
+│
+├── context/
+│   └── WorkoutContext.tsx
+│
+├── lib/
+│   └── api.ts
+│
+└── types/
+    └── workout.ts
+```
+
+## Getting Started
+
+Clone the repository and install the dependencies:
+
+```bash
+git clone YOUR_GITHUB_REPOSITORY_URL
+cd YOUR_PROJECT_FOLDER
+npm install
+```
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000` in your browser.
+
+## Build
+
+To create a production build:
+
+```bash
+npm run build
+```
+
+To start the production server:
+
+```bash
+npm start
+```
+
+## Author
+
+Built as a web development assignment project using Next.js, TypeScript, React, and Tailwind CSS.

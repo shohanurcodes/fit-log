@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -12,6 +13,7 @@ const Navbar = () => {
   return (
     <nav className="w-full border-b border-white/10 bg-[#111111]">
       <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between gap-2 px-3 sm:px-6 lg:px-8">
+
         {/* Logo */}
         <Link
           href="/"
@@ -31,8 +33,8 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Navigation */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        {/* Navigation - Hidden on mobile */}
+        <div className="hidden items-center gap-1 sm:flex sm:gap-2">
           <Link
             href="/"
             className={`rounded-full px-2.5 py-1.5 text-[10px] font-semibold uppercase transition sm:px-4 sm:py-2 sm:text-sm ${
@@ -73,6 +75,7 @@ const Navbar = () => {
             <span className="ml-0.5 sm:ml-1">{savedWorkouts.length}</span>
           </Link>
         </div>
+
       </div>
     </nav>
   );
