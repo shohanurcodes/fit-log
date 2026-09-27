@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -28,25 +29,25 @@ const MyPlanPage = () => {
   const [sortBy, setSortBy] = useState<SortOption>("duration");
 
   // =========================
-  // Metrics
-  // =========================
-
-  const totalMinutes = todayPlan.reduce(
-    (total, workout) => total + workout.duration,
-    0
-  );
-
-  const totalCalories = todayPlan.reduce(
-    (total, workout) => total + workout.caloriesBurned,
-    0
-  );
-
-  // =========================
   // Current Tab
   // =========================
 
   const currentWorkouts =
     activeTab === "plan" ? todayPlan : savedWorkouts;
+
+  // =========================
+  // Metrics
+  // =========================
+
+  const totalMinutes = currentWorkouts.reduce(
+    (total, workout) => total + workout.duration,
+    0
+  );
+
+  const totalCalories = currentWorkouts.reduce(
+    (total, workout) => total + workout.caloriesBurned,
+    0
+  );
 
   // =========================
   // Sorting
@@ -95,9 +96,11 @@ const MyPlanPage = () => {
   return (
     <main className="min-h-screen bg-[#0d0e10] px-4 py-8 text-white sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
+
         {/* ========================================
             HEADER
         ======================================== */}
+
         <div className="mb-7">
           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[#ccff00]">
             Training Dashboard
@@ -126,7 +129,9 @@ const MyPlanPage = () => {
         {/* ========================================
             METRICS
         ======================================== */}
+
         <div className="mb-7 grid grid-cols-3 gap-2 sm:gap-3">
+
           {/* Exercises */}
           <div className="rounded-xl border border-[#24272e] bg-[#14161a] px-3 py-4 sm:px-5">
             <p className="text-[9px] font-bold uppercase tracking-wider text-[#666b75]">
@@ -134,7 +139,7 @@ const MyPlanPage = () => {
             </p>
 
             <p className="mt-1 text-2xl font-black text-white sm:text-3xl">
-              {todayPlan.length}
+              {currentWorkouts.length}
             </p>
           </div>
 
@@ -164,7 +169,9 @@ const MyPlanPage = () => {
         {/* ========================================
             TABS + SORT
         ======================================== */}
+
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
           {/* Tabs */}
           <div className="flex w-fit rounded-lg border border-[#24272e] bg-[#14161a] p-1">
             <button
@@ -246,6 +253,7 @@ const MyPlanPage = () => {
         {/* ========================================
             EMPTY STATE
         ======================================== */}
+
         {sortedWorkouts.length === 0 ? (
           <div className="rounded-2xl border border-[#24272e] bg-[#14161a] px-6 py-16 text-center">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[#30343c] bg-[#191b20]">
@@ -272,9 +280,11 @@ const MyPlanPage = () => {
             </Link>
           </div>
         ) : (
+
           /* ========================================
              WORKOUT LIST
           ======================================== */
+
           <div className="space-y-3">
             {sortedWorkouts.map((workout) => (
               <div
@@ -282,9 +292,9 @@ const MyPlanPage = () => {
                 className="overflow-hidden rounded-xl border border-[#24272e] bg-[#14161a] transition hover:border-[#343841]"
               >
                 <div className="flex min-h-[110px]">
-                  {/* ========================================
-                      IMAGE
-                  ======================================== */}
+
+                  {/* IMAGE */}
+
                   <div className="relative w-[105px] shrink-0 sm:w-[145px]">
                     <Image
                       src={workout.image}
@@ -295,11 +305,12 @@ const MyPlanPage = () => {
                     />
                   </div>
 
-                  {/* ========================================
-                      CONTENT
-                  ======================================== */}
+                  {/* CONTENT */}
+
                   <div className="flex min-w-0 flex-1 flex-col justify-center gap-3 px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+
                     {/* Workout Info */}
+
                     <div className="min-w-0">
                       <p className="mb-1 text-[8px] font-bold uppercase tracking-[0.15em] text-[#ccff00]">
                         {workout.difficulty}
@@ -314,6 +325,7 @@ const MyPlanPage = () => {
                       </p>
 
                       {/* Stats */}
+
                       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[9px] text-[#777c86]">
                         <span className="flex items-center gap-1">
                           <Clock3
@@ -341,11 +353,12 @@ const MyPlanPage = () => {
                       </div>
                     </div>
 
-                    {/* ========================================
-                        ACTIONS
-                    ======================================== */}
+                    {/* ACTIONS */}
+
                     <div className="flex shrink-0 items-center gap-2">
+
                       {/* Desktop View Details */}
+
                       <Link
                         href={`/workout/${workout.id}`}
                         className="hidden rounded-full border border-[#30343c] px-3 py-2 text-[9px] font-bold uppercase tracking-wide text-[#b5bac4] transition hover:border-white hover:text-white sm:block"
@@ -354,10 +367,13 @@ const MyPlanPage = () => {
                       </Link>
 
                       {/* Mark as Done */}
+
                       {activeTab === "plan" && (
                         <button
                           type="button"
-                          onClick={() => handleMarkAsDone(workout.id)}
+                          onClick={() =>
+                            handleMarkAsDone(workout.id)
+                          }
                           className="flex items-center gap-1.5 rounded-full bg-[#ccff00] px-3 py-2 text-[9px] font-black uppercase tracking-wide text-black transition hover:bg-[#b8e600]"
                         >
                           <Check size={11} strokeWidth={3} />
@@ -373,9 +389,12 @@ const MyPlanPage = () => {
                       )}
 
                       {/* Remove */}
+
                       <button
                         type="button"
-                        onClick={() => handleRemove(workout.id)}
+                        onClick={() =>
+                          handleRemove(workout.id)
+                        }
                         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#666b75] transition hover:bg-[#202228] hover:text-white"
                         aria-label={`Remove ${workout.name}`}
                       >
@@ -385,9 +404,8 @@ const MyPlanPage = () => {
                   </div>
                 </div>
 
-                {/* ========================================
-                    MOBILE DETAILS LINK
-                ======================================== */}
+                {/* MOBILE DETAILS LINK */}
+
                 <div className="border-t border-[#202228] px-4 py-2 sm:hidden">
                   <Link
                     href={`/workout/${workout.id}`}
